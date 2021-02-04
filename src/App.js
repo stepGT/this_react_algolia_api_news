@@ -28,32 +28,32 @@ class App extends Component {
     // this.onDismiss = this.onDismiss.bind(this);
   }
   onDismiss(id) {
-    const isNotId = item => item.objectID !== id
-    const updatedList = this.state.list.filter(isNotId)
+    const updatedList = this.state.list.filter(item => item.objectID !== id)
     this.setState({ list: updatedList })
   }
   render() {
     return (
       <div className="App">
-        { this.state.list.map( item =>
-          <div key={ item.objectID }>
-            <span>
-              <a href={ item.url }>{ item.title }</a>
-            </span>&nbsp;
-            <span>{ item.author }</span>&nbsp;
-            <span>{ item.num_comments }</span>
-            <span>{ item.points }</span>
+        { this.state.list.map(item => {
+          return (
+            <div key={item.objectID}>
+              <span>
+                <a href={item.url}>{item.title}</a>
+              </span>&nbsp;
+              <span>{item.author}</span>&nbsp;
+              <span>{item.num_comments}</span>
+              <span>{item.points}</span>
             &nbsp;
-            <span>
-              <button
-                onClick={ () => this.onDismiss(item.objectID) }
-                type="button"
-              >Отбросить
-              </button>
-            </span>
-          </div>
-        )
-        }
+              <span>
+                <button
+                  onClick={() => this.onDismiss(item.objectID)}
+                  type="button"
+                >
+                  Отбросить</button>
+              </span>
+            </div>
+          )
+        })}
       </div>
     );
   }
