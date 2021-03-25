@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
 
+const DEFAULT_QUERY = "redux";
+const DEFAULT_COUNT = "10";
+const PATH_BASE = "https://hn.algolia.com/api/v1";
+const PATH_SEARCH = "/search";
+const PARAM_SEARCH = "query=";
+const HITSPERPAGE = "hitsPerPage=";
+
 const largeColumn = {
   width: "40%",
 };
@@ -11,29 +18,9 @@ const smallColumn = {
   width: "10%",
 };
 
-const list = [
-  {
-    title: "React",
-    url: "https://reactjs.org/",
-    author: "Jordan Walke",
-    num_comments: 3,
-    points: 4,
-    objectID: 1,
-  },
-  {
-    title: "Redux",
-    url: "https://redux.js.org/",
-    author: "Dan Abramov, Andrew Clark",
-    num_comments: 2,
-    points: 5,
-    objectID: 2,
-  },
-];
-
 function isSearched(searchTerm) {
   console.log("searchTerm", searchTerm);
   return function (item) {
-    console.log("item", item);
     return item.title.toLowerCase().includes(searchTerm.toLowerCase());
   };
 }
@@ -42,20 +29,64 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list,
-      searchTerm: "",
+      result: null,
+      searchTerm: DEFAULT_QUERY,
     };
     // Work without bind
+    this.setSearchTopStories = this.setSearchTopStories.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     console.log("constructor", this.state);
   }
 
-  onDismiss(id) {
-    console.log("onDismiss", this.state);
-    const updatedList = this.state.list.filter((item) => item.objectID !== id);
-    this.setState({ list: updatedList });
+  setSearchTopStories(result) {
+    this.setState({ result });
   }
+  componentDidMount() {
+    console.log("componentDidMount", this.state);
+    const { searchTerm } = this.state;
+    console.log("searchTerm", searchTerm);
+    fetch(
+      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}&${HITSPERPAGE}${DEFAULT_COUNT}`
+    )
+      .then((response) => response.json())
+      .then((result) => this.setSearchTopStories(result))
+      .catch((error) => error);
+  }
+
+  onDismiss(id) {
+    const isNotId = (item) => item.objectID !== id;
+    const updatedHits = this.state.result.hits.filter(isNotId);
+    this.setState({
+      result: { ...this.state.result, hits: updatedHits },
+    });
+  }
+
+  // static getDerivedStateFromProps(props, state) {
+  //   console.log("getDerivedStateFromProps", state);
+  // }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("shouldComponentUpdate", nextState);
+    return true;
+  }
+
+  // getSnapshotBeforeUpdate() {
+  //   console.log("getSnapshotBeforeUpdate");
+  // }
+
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+  }
+
+  // жизненный цикл размонтирования
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
+  }
+
+  // componentWillUpdate() {
+  //   console.log("componentWillUpdate");
+  // }
 
   onSearchChange(e) {
     this.setState({ searchTerm: e.target.value });
@@ -64,7 +95,10 @@ class App extends Component {
 
   render() {
     console.log("render", this.state);
-    const { searchTerm, list } = this.state;
+    const { searchTerm, result } = this.state;
+    if (!result) {
+      return null;
+    }
     return (
       <div className="page">
         <div className="interactions">
@@ -72,7 +106,11 @@ class App extends Component {
             Поиск
           </Search>
         </div>
-        <Table list={list} pattern={searchTerm} onDismiss={this.onDismiss} />
+        <Table
+          list={result.hits}
+          pattern={searchTerm}
+          onDismiss={this.onDismiss}
+        />
       </div>
     );
   }
