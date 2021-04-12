@@ -29,12 +29,18 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
     };
     // Work without bind
+    this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
     console.log("constructor", this.state);
+  }
+
+  needsToSearchTopStories( searchTerm ) {
+    console.log("needsToSearchTopStories", this.state);
+    return !this.state.results[searchTerm];
   }
 
   setSearchTopStories(result) {
@@ -49,11 +55,15 @@ class App extends Component {
       }
     });
   }
+
   onSearchSubmit(e) {
     e.preventDefault();
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
+    if (this.needsToSearchTopStories(searchTerm)) {
+      this.fetchSearchTopStories(searchTerm);
+    }
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
