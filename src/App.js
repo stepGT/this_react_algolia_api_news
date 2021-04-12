@@ -112,11 +112,11 @@ class App extends Component {
 
   render() {
     console.log("render", this.state);
-    const { searchTerm, result } = this.state;
-    const page = (result && result.page) || 0;
-    if (!result) {
-      return null;
-    }
+    const { searchTerm, results, searchKey } = this.state;
+    const page =
+      (results && results[searchKey] && results[searchKey].page) || 0;
+    const list =
+      (results && results[searchKey] && results[searchKey].hits) || [];
     return (
       <div className="page">
         <div className="interactions">
@@ -128,11 +128,12 @@ class App extends Component {
             Поиск
           </Search>
         </div>
-        {result && <Table list={result.hits} onDismiss={this.onDismiss} />}
+        <Table
+          list={list}
+          onDismiss={this.onDismiss}
+        />
         <div className="interactions">
-          <Button
-            onClick={() => this.fetchSearchTopStories(searchTerm, page + 1)}
-          >
+          <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
             Больше историй
           </Button>
         </div>
