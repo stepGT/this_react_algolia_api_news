@@ -1,7 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import renderer from "react-test-renderer";
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import App, { Table } from "./App";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 // describe("App", () => {
 //   it("отрисовывает без ошибки", () => {
