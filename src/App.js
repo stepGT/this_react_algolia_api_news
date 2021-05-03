@@ -38,11 +38,9 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
-    console.log("constructor", this.state);
   }
 
   needsToSearchTopStories( searchTerm ) {
-    console.log("needsToSearchTopStories", this.state);
     return !this.state.results[searchTerm];
   }
 
@@ -75,9 +73,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount", this.state);
     const { searchTerm } = this.state;
-    console.log("searchTerm", searchTerm);
     this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
   }
@@ -95,39 +91,22 @@ class App extends Component {
     });
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   console.log("getDerivedStateFromProps", state);
-  // }
-
   shouldComponentUpdate(nextProps, nextState) {
-    console.log("shouldComponentUpdate", nextState);
     return true;
   }
 
-  // getSnapshotBeforeUpdate() {
-  //   console.log("getSnapshotBeforeUpdate");
-  // }
-
   componentDidUpdate() {
-    console.log("componentDidUpdate");
   }
 
   // жизненный цикл размонтирования
   componentWillUnmount() {
-    console.log("componentWillUnmount");
   }
-
-  // componentWillUpdate() {
-  //   console.log("componentWillUpdate");
-  // }
 
   onSearchChange(e) {
     this.setState({ searchTerm: e.target.value });
-    console.log("onSearchChange", this.state);
   }
 
   render() {
-    console.log("render", this.state);
     const { searchTerm, results, searchKey, error } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
