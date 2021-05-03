@@ -29,7 +29,8 @@ class App extends Component {
       results: null,
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
-      error: null
+      error: null,
+      isLoading: false,
     };
     // Work without bind
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -53,7 +54,8 @@ class App extends Component {
       results: {
         ...results,
         [searchKey]: { hits: updatedHits, page }
-      }
+      },
+      isLoading: false
     });
   }
 
@@ -67,6 +69,7 @@ class App extends Component {
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
+    this.setState({ isLoading: true });
     axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${HITSPERPAGE}${DEFAULT_COUNT}`)
       .then(result => this.setSearchTopStories(result.data))
       .catch(error => this.setState({ error }));
@@ -107,7 +110,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -134,9 +137,15 @@ class App extends Component {
           <Table list={list} onDismiss={this.onDismiss} />
         )}
         <div className="interactions">
-          <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
-            Больше историй
-          </Button>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Button
+              onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+            >
+              Больше историй
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -198,6 +207,8 @@ const Button = ({ onClick, className, children }) => {
     </button>
   );
 };
+
+const Loading = () => <div>Загрузка ...</div>
 
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
