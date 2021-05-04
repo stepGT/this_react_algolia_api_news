@@ -137,15 +137,12 @@ class App extends Component {
           <Table list={list} onDismiss={this.onDismiss} />
         )}
         <div className="interactions">
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <Button
-              onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
-            >
-              Больше историй
-            </Button>
-          )}
+          <ButtonWithLoading
+            isLoading={isLoading}
+            onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+          >
+            Больше историй
+          </ButtonWithLoading>
         </div>
       </div>
     );
@@ -209,6 +206,13 @@ const Button = ({ onClick, className, children }) => {
 };
 
 const Loading = () => <div>Загрузка ...</div>
+
+const withLoading = Component => ({ isLoading, ...rest }) => {
+  console.log('withLoading', rest)
+  return isLoading ? <Loading /> : <Component {...rest} />
+};
+
+const ButtonWithLoading = withLoading(Button);
 
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
