@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import PropTypes from 'prop-types'
+import { sortBy } from 'lodash';
 import "./App.css";
+
+const SORTS = {
+  NONE: (list) => list,
+  TITLE: (list) => sortBy(list, "title"),
+  AUTHOR: (list) => sortBy(list, "author"),
+  COMMENTS: (list) => sortBy(list, "num_comments").reverse(),
+  POINTS: (list) => sortBy(list, "points").reverse(),
+};
 
 const DEFAULT_QUERY = "redux";
 const DEFAULT_COUNT = "10";
@@ -31,6 +40,7 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       error: null,
       isLoading: false,
+      sortKey: "TITLE",
     };
     // Work without bind
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -39,6 +49,11 @@ class App extends Component {
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
+    this.onSort = this.onSort.bind(this);
+  }
+
+  onSort(sortKey) {
+    this.setState({ sortKey });
   }
 
   needsToSearchTopStories( searchTerm ) {
@@ -110,7 +125,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading, sortKey } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -134,7 +149,7 @@ class App extends Component {
             <p>Something went wrong.</p>
           </div>
         ) : (
-          <Table list={list} onDismiss={this.onDismiss} />
+          <Table sortKey={sortKey} onSort={this.onSort} list={list} onDismiss={this.onDismiss} />
         )}
         <div className="interactions">
           <ButtonWithLoading
@@ -172,10 +187,33 @@ class Search extends Component {
   }
 }
 
-const Table = ({ list, onDismiss }) => {
+const Table = ({ list, onDismiss, sortKey, onSort }) => {
   return (
     <div className="table">
-      {list.map((item) => (
+      <div className="table-header">
+        <span style={{ width: "40%" }}>
+          <Sort sortKey={"TITLE"} onSort={onSort}>
+            Заголовок
+          </Sort>
+        </span>
+        <span style={{ width: "30%" }}>
+          <Sort sortKey={"AUTHOR"} onSort={onSort}>
+            Автор
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>
+          <Sort sortKey={"COMMENTS"} onSort={onSort}>
+            Комментарии
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>
+          <Sort sortKey={"POINTS"} onSort={onSort}>
+            Очки
+          </Sort>
+        </span>
+        <span style={{ width: "10%" }}>Архив</span>
+      </div>
+      {SORTS[sortKey](list).map((item) => (
         <div className="table-row" key={item.objectID}>
           <span style={largeColumn}>
             <a href={item.url}>{item.title}</a>
@@ -208,11 +246,14 @@ const Button = ({ onClick, className, children }) => {
 const Loading = () => <div>Загрузка ...</div>
 
 const withLoading = Component => ({ isLoading, ...rest }) => {
-  console.log('withLoading', rest)
   return isLoading ? <Loading /> : <Component {...rest} />
 };
 
 const ButtonWithLoading = withLoading(Button);
+
+const Sort = ({ sortKey, onSort, children }) => (
+  <Button onClick={() => onSort(sortKey)}>{children}</Button>
+);
 
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
