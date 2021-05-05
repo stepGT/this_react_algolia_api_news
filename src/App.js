@@ -210,22 +210,22 @@ const Table = ({ list, onDismiss, sortKey, onSort, isSortReverse }) => {
     <div className="table">
       <div className="table-header">
         <span style={{ width: "40%" }}>
-          <Sort sortKey={"TITLE"} onSort={onSort}>
+          <Sort activeSortKey={sortKey} sortKey={"TITLE"} onSort={onSort}>
             Заголовок
           </Sort>
         </span>
         <span style={{ width: "30%" }}>
-          <Sort sortKey={"AUTHOR"} onSort={onSort}>
+          <Sort activeSortKey={sortKey} sortKey={"AUTHOR"} onSort={onSort}>
             Автор
           </Sort>
         </span>
         <span style={{ width: "10%" }}>
-          <Sort sortKey={"COMMENTS"} onSort={onSort}>
+          <Sort activeSortKey={sortKey} sortKey={"COMMENTS"} onSort={onSort}>
             Комментарии
           </Sort>
         </span>
         <span style={{ width: "10%" }}>
-          <Sort sortKey={"POINTS"} onSort={onSort}>
+          <Sort activeSortKey={sortKey} sortKey={"POINTS"} onSort={onSort}>
             Очки
           </Sort>
         </span>
@@ -269,9 +269,17 @@ const withLoading = Component => ({ isLoading, ...rest }) => {
 
 const ButtonWithLoading = withLoading(Button);
 
-const Sort = ({ sortKey, onSort, children }) => (
-  <Button className="button-inline" onClick={() => onSort(sortKey)}>{children}</Button>
-);
+const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
+  const sortClass = ["button-inline"];
+  if (sortKey === activeSortKey) {
+    sortClass.push("button-active");
+  }
+  return (
+    <Button className={sortClass.join(" ")} onClick={() => onSort(sortKey)}>
+      {children}
+    </Button>
+  );
+};
 
 Button.propTypes = {
   onClick: PropTypes.func.isRequired,
