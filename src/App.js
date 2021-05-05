@@ -41,6 +41,7 @@ class App extends Component {
       error: null,
       isLoading: false,
       sortKey: "TITLE",
+      isSortReverse: false,
     };
     // Work without bind
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -53,7 +54,8 @@ class App extends Component {
   }
 
   onSort(sortKey) {
-    this.setState({ sortKey });
+    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+    this.setState({ sortKey, isSortReverse });
   }
 
   needsToSearchTopStories( searchTerm ) {
@@ -125,7 +127,15 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading, sortKey } = this.state;
+    const {
+      searchTerm,
+      results,
+      searchKey,
+      error,
+      isLoading,
+      sortKey,
+      isSortReverse
+    } = this.state;
     const page =
       (results && results[searchKey] && results[searchKey].page) || 0;
     const list =
@@ -149,7 +159,13 @@ class App extends Component {
             <p>Something went wrong.</p>
           </div>
         ) : (
-          <Table sortKey={sortKey} onSort={this.onSort} list={list} onDismiss={this.onDismiss} />
+          <Table
+            isSortReverse={isSortReverse}
+            sortKey={sortKey}
+            onSort={this.onSort}
+            list={list}
+            onDismiss={this.onDismiss}
+          />
         )}
         <div className="interactions">
           <ButtonWithLoading
@@ -187,7 +203,9 @@ class Search extends Component {
   }
 }
 
-const Table = ({ list, onDismiss, sortKey, onSort }) => {
+const Table = ({ list, onDismiss, sortKey, onSort, isSortReverse }) => {
+  const sortedList = SORTS[sortKey](list);
+  const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
   return (
     <div className="table">
       <div className="table-header">
@@ -213,7 +231,7 @@ const Table = ({ list, onDismiss, sortKey, onSort }) => {
         </span>
         <span style={{ width: "10%" }}>Архив</span>
       </div>
-      {SORTS[sortKey](list).map((item) => (
+      { reverseSortedList.map((item) => (
         <div className="table-row" key={item.objectID}>
           <span style={largeColumn}>
             <a href={item.url}>{item.title}</a>
