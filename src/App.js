@@ -252,7 +252,7 @@ const withLoading = Component => ({ isLoading, ...rest }) => {
 const ButtonWithLoading = withLoading(Button);
 
 const Sort = ({ sortKey, onSort, children }) => (
-  <Button onClick={() => onSort(sortKey)}>{children}</Button>
+  <Button className="button-inline" onClick={() => onSort(sortKey)}>{children}</Button>
 );
 
 Button.propTypes = {
