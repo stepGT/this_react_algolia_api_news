@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from 'axios';
 import PropTypes from 'prop-types'
 import { sortBy } from 'lodash';
+import classNames from 'classnames';
 import "./App.css";
 
 const SORTS = {
@@ -270,12 +271,11 @@ const withLoading = Component => ({ isLoading, ...rest }) => {
 const ButtonWithLoading = withLoading(Button);
 
 const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
-  const sortClass = ["button-inline"];
-  if (sortKey === activeSortKey) {
-    sortClass.push("button-active");
-  }
+  const sortClass = classNames("button-inline", {
+    "button-active": sortKey === activeSortKey,
+  });
   return (
-    <Button className={sortClass.join(" ")} onClick={() => onSort(sortKey)}>
+    <Button className={sortClass} onClick={() => onSort(sortKey)}>
       {children}
     </Button>
   );
