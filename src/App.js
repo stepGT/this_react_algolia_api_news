@@ -3,6 +3,15 @@ import axios from 'axios';
 import PropTypes from 'prop-types'
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
+import {
+  DEFAULT_QUERY,
+  DEFAULT_COUNT,
+  PATH_BASE,
+  PATH_SEARCH,
+  PARAM_SEARCH,
+  HITSPERPAGE,
+  PARAM_PAGE,
+} from "./constants";
 import "./App.css";
 
 const SORTS = {
@@ -13,13 +22,6 @@ const SORTS = {
   POINTS: (list) => sortBy(list, "points").reverse(),
 };
 
-const DEFAULT_QUERY = "redux";
-const DEFAULT_COUNT = "10";
-const PATH_BASE = "https://hn.algolia.com/api/v1";
-const PATH_SEARCH = "/search";
-const PARAM_SEARCH = "query=";
-const HITSPERPAGE = "hitsPerPage=";
-const PARAM_PAGE = "page=";
 
 const largeColumn = {
   width: "40%",
