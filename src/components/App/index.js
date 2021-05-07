@@ -11,8 +11,8 @@ import {
   PARAM_SEARCH,
   HITSPERPAGE,
   PARAM_PAGE,
-} from "./constants";
-import "./App.css";
+} from "../../constants";
+import "./index.css";
 
 const SORTS = {
   NONE: (list) => list,
