@@ -3,15 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types'
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
-import {
-  DEFAULT_QUERY,
-  DEFAULT_COUNT,
-  PATH_BASE,
-  PATH_SEARCH,
-  PARAM_SEARCH,
-  HITSPERPAGE,
-  PARAM_PAGE,
-} from "../../constants";
+import * as constants  from "../../constants";
 import "./index.css";
 
 const SORTS = {
@@ -52,7 +44,7 @@ class App extends Component {
     this.state = {
       results: null,
       searchKey: '',
-      searchTerm: DEFAULT_QUERY,
+      searchTerm: constants.DEFAULT_QUERY,
       error: null,
       isLoading: false,
       sortKey: "TITLE",
@@ -87,7 +79,7 @@ class App extends Component {
 
   fetchSearchTopStories(searchTerm, page = 0) {
     this.setState({ isLoading: true });
-    axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${HITSPERPAGE}${DEFAULT_COUNT}`)
+    axios(`${constants.PATH_BASE}${constants.PATH_SEARCH}?${constants.PARAM_SEARCH}${searchTerm}&${constants.PARAM_PAGE}${page}&${constants.HITSPERPAGE}${constants.DEFAULT_COUNT}`)
       .then(result => this.setSearchTopStories(result.data))
       .catch(error => this.setState({ error }));
   }
