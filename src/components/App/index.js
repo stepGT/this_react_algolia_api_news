@@ -5,6 +5,7 @@ import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import * as constants  from "../../constants";
 import "./index.css";
+import { Button, ButtonWithLoading } from '../../components/Button'
 
 const SORTS = {
   NONE: (list) => list,
@@ -268,22 +269,6 @@ class Table extends Component {
   }
 }
 
-const Button = ({ onClick, className, children }) => {
-  return (
-    <button onClick={onClick} className={className} type="button">
-      {children}
-    </button>
-  );
-};
-
-const Loading = () => <div>Загрузка ...</div>
-
-const withLoading = Component => ({ isLoading, ...rest }) => {
-  return isLoading ? <Loading /> : <Component {...rest} />
-};
-
-const ButtonWithLoading = withLoading(Button);
-
 const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
   const sortClass = classNames("button-inline", {
     "button-active": sortKey === activeSortKey,
@@ -293,12 +278,6 @@ const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
       {children}
     </Button>
   );
-};
-
-Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
 };
 
 Table.propTypes = {
