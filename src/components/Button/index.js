@@ -1,24 +1,42 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-export const Button = ({ onClick, className, children }) => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+}));
+
+export function ContainedButtons({ onClick, children }) {
+  const classes = useStyles();
+
   return (
-    <button onClick={onClick} className={className} type="button">
-      {children}
-    </button>
+    <div className={classes.root}>
+      <Button onClick={onClick} variant="contained">
+        {children}
+      </Button>
+    </div>
   );
-};
+}
 
-export const Loading = () => <div>Загрузка ...</div>;
+export function CircularIndeterminate() {
+  const classes = useStyles();
 
-export const withLoading = (Component) => ({ isLoading, ...rest }) => {
-  return isLoading ? <Loading /> : <Component {...rest} />;
-};
+  return (
+    <div className={classes.root}>
+      <CircularProgress />
+    </div>
+  );
+}
 
-export const ButtonWithLoading = withLoading(Button);
+export const withLoading =
+  (Component) =>
+  ({ isLoading, ...rest }) => {
+    return isLoading ? <CircularIndeterminate /> : <Component {...rest} />;
+  };
 
-Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
+export const ButtonWithLoading = withLoading(ContainedButtons);

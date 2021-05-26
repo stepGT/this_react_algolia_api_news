@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import * as constants  from "../../constants";
-import { Button, ButtonWithLoading } from '../../components/Button'
+import { ButtonWithLoading } from '../../components/Button'
 import { BasicTable} from '../../components/Table'
 import { BasicTextFields} from '../../components/Search'
 
@@ -152,9 +152,9 @@ const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
     "button-active": sortKey === activeSortKey,
   });
   return (
-    <Button className={sortClass} onClick={() => onSort(sortKey)}>
+    <ButtonWithLoading className={sortClass} onClick={() => onSort(sortKey)}>
       {children}
-    </Button>
+    </ButtonWithLoading>
   );
 };
 
