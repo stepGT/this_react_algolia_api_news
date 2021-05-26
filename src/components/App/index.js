@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import * as constants  from "../../constants";
-import "./index.css";
 import { Button, ButtonWithLoading } from '../../components/Button'
 import { BasicTable} from '../../components/Table'
 import { BasicTextFields} from '../../components/Search'
@@ -144,29 +143,6 @@ class App extends Component {
           </ButtonWithLoading>
         </div>
       </div>
-    );
-  }
-}
-
-class Search extends Component {
-  componentDidMount() {
-    if (this.input) {
-      this.input.focus();
-    }
-  }
-  render() {
-    const { value, onChange, onSubmit, children } = this.props;
-
-    return (
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          value={value}
-          onChange={onChange}
-          ref={(node) => (this.input = node)}
-        />
-        <button type="submit">{children}</button>
-      </form>
     );
   }
 }
