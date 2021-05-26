@@ -7,6 +7,7 @@ import * as constants  from "../../constants";
 import { ButtonWithLoading } from '../../components/Button'
 import { BasicTable} from '../../components/Table'
 import { BasicTextFields} from '../../components/Search'
+import Box from '@material-ui/core/Box';
 
 const updateSearchTopStoriesState = (hits, page) => (prevState) => {
   const { searchKey, results } = prevState;
@@ -118,7 +119,7 @@ class App extends Component {
     }
     return (
       <div className="page">
-        <div className="interactions">
+        <Box textAlign="center" m={1}>
           <BasicTextFields
             value={searchTerm}
             onChange={this.onSearchChange}
@@ -126,7 +127,7 @@ class App extends Component {
           >
             Поиск
           </BasicTextFields>
-        </div>
+        </Box>
         {error ? (
           <div className="interactions">
             <p>Something went wrong.</p>
@@ -134,14 +135,14 @@ class App extends Component {
         ) : (
           <BasicTable list={list} onDismiss={this.onDismiss} />
         )}
-        <div className="interactions">
+        <Box textAlign="center" m={1}>
           <ButtonWithLoading
             isLoading={isLoading}
             onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
           >
             Больше историй
           </ButtonWithLoading>
-        </div>
+        </Box>
       </div>
     );
   }
