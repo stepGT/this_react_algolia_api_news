@@ -7,6 +7,7 @@ import * as constants  from "../../constants";
 import "./index.css";
 import { Button, ButtonWithLoading } from '../../components/Button'
 import { BasicTable} from '../../components/Table'
+import { BasicTextFields} from '../../components/Search'
 
 const updateSearchTopStoriesState = (hits, page) => (prevState) => {
   const { searchKey, results } = prevState;
@@ -119,13 +120,13 @@ class App extends Component {
     return (
       <div className="page">
         <div className="interactions">
-          <Search
+          <BasicTextFields
             value={searchTerm}
             onChange={this.onSearchChange}
             onSubmit={this.onSearchSubmit}
           >
             Поиск
-          </Search>
+          </BasicTextFields>
         </div>
         {error ? (
           <div className="interactions">
